@@ -29,6 +29,11 @@ public class AbstractBaseTest {
         } else {
             reportPath = System.getProperty("user.dir") + "/test-output/report.html";
         }
+        extentHtmlReporter = new ExtentHtmlReporter(reportPath);
+        extentReports.attachReporter(extentHtmlReporter);
+        extentHtmlReporter.config().setReportName("WebOrders Automation");
+
+
     }
     @AfterTest
     public void afterTest(){

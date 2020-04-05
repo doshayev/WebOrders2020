@@ -13,6 +13,8 @@ import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 
+import java.io.IOException;
+
 public class AbstractBaseTest {
     protected WebDriver driver = Driver.getDriver();
 
@@ -50,6 +52,12 @@ public class AbstractBaseTest {
     public void teardown(ITestResult testResult){
         if (testResult.getStatus() == ITestResult.FAILURE){
             String screenshotLocation = BrowserUtilities.getScreenshot(testResult.getName());
+            try {
+                extentTest.addScreenCaptureFromPath(screenshotLocation);
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new RuntimeException("Failed to attach screenshot");
+            }
         }
         BrowserUtilities.wait(3);
         Driver.closeDriver();

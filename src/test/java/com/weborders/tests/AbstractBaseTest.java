@@ -23,6 +23,12 @@ public class AbstractBaseTest {
     @BeforeTest
     public void beforeTest(){
         extentReports = new ExtentReports();
+        String reportPath = "";
+        if (System.getProperty("os.name").toLowerCase().contains("win")) {
+            reportPath = System.getProperty("user.dir") + "\\test-output\\report.html";
+        } else {
+            reportPath = System.getProperty("user.dir") + "/test-output/report.html";
+        }
     }
     @AfterTest
     public void afterTest(){

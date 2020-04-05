@@ -12,10 +12,11 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
-
 import java.io.IOException;
 
-public class AbstractBaseTest {
+
+public abstract class AbstractBaseTest {
+
     protected WebDriver driver = Driver.getDriver();
 
     protected static ExtentReports extentReports;
@@ -23,9 +24,10 @@ public class AbstractBaseTest {
     protected static ExtentTest extentTest;
 
     @BeforeTest
-    public void beforeTest(){
+    public void beforeTest() {
         extentReports = new ExtentReports();
         String reportPath = "";
+
         if (System.getProperty("os.name").toLowerCase().contains("win")) {
             reportPath = System.getProperty("user.dir") + "\\test-output\\report.html";
         } else {
@@ -35,39 +37,36 @@ public class AbstractBaseTest {
         extentReports.attachReporter(extentHtmlReporter);
         extentHtmlReporter.config().setReportName("WebOrders Automation");
 
-
     }
+
     @AfterTest
-    public void afterTest(){
+    public void afterTest() {
         extentReports.flush();
     }
 
     @BeforeMethod
-    public void setup(){
+    public void setup() {
         driver.get(ConfigurationReader.getProperty("url"));
         driver.manage().window().maximize();
     }
 
     @AfterMethod
-    public void teardown(ITestResult testResult){
-        if (testResult.getStatus() == ITestResult.FAILURE){
+    public void teardown(ITestResult testResult) {
+        if (testResult.getStatus() == ITestResult.FAILURE) {
             String screenshotLocation = BrowserUtilities.getScreenshot(testResult.getName());
             try {
-                extentTest.fail(testResult.getName()); //test name that failed
-                extentTest.addScreenCaptureFromPath(screenshotLocation); //screenshot as evidence
-                extentTest.fail(testResult.getThrowable()); // error message
+                extentTest.fail(testResult.getName());//test name that failed
+                extentTest.addScreenCaptureFromPath(screenshotLocation);//screenshot as an evidence
+                extentTest.fail(testResult.getThrowable());//error message
             } catch (IOException e) {
                 e.printStackTrace();
                 throw new RuntimeException("Failed to attach screenshot");
             }
-        // if test success
-        }else if (testResult.getStatus() == ITestResult.SUCCESS){
+        }else if(testResult.getStatus() == ITestResult.SUCCESS){
             extentTest.pass(testResult.getName());
-        // if test skip
-        }else if (testResult.getStatus() == ITestResult.SKIP){
+        }else if(testResult.getStatus() == ITestResult.SKIP){
             extentTest.skip(testResult.getName());
         }
-
         BrowserUtilities.wait(3);
         Driver.closeDriver();
     }

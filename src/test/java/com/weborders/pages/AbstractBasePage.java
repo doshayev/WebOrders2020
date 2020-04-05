@@ -9,27 +9,30 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-//it meant to be extended
+/**
+ * It meant to be extended
+ */
 public abstract class AbstractBasePage {
-
     protected WebDriver driver = Driver.getDriver();
-    protected WebDriverWait wait = new WebDriverWait(driver,20);
+    protected WebDriverWait wait = new WebDriverWait(driver, 20);
 
     @FindBy(tagName = "h1")
     protected WebElement pageLogo;
 
-    public String getPageLogoText(){
+    public String getPageLogoText() {
         return pageLogo.getText();
     }
 
-    public AbstractBasePage(){
-        PageFactory.initElements(Driver.getDriver(),this);
+    public AbstractBasePage() {
+        PageFactory.initElements(driver, this);
     }
-    //Specify component name as a parameter, like: View all products or orders
-    public void navigateTo(String component){
+
+    /**
+     * Specify component name as a parameter, like: View all products or Orders
+     * @param component
+     */
+    public void navigateTo(String component) {
         String locator = "//a[text()='" + component + "']";
         wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(locator))).click();
-
     }
-
 }

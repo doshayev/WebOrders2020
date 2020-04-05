@@ -53,12 +53,21 @@ public class AbstractBaseTest {
         if (testResult.getStatus() == ITestResult.FAILURE){
             String screenshotLocation = BrowserUtilities.getScreenshot(testResult.getName());
             try {
-                extentTest.addScreenCaptureFromPath(screenshotLocation);
+                extentTest.fail(testResult.getName()); //test name that failed
+                extentTest.addScreenCaptureFromPath(screenshotLocation); //screenshot as evidence
+                extentTest.fail(testResult.getThrowable()); // error message
             } catch (IOException e) {
                 e.printStackTrace();
                 throw new RuntimeException("Failed to attach screenshot");
             }
+        // if test success
+        }else if (testResult.getStatus() == ITestResult.SUCCESS){
+            extentTest.pass(testResult.getName());
+        // if test skip
+        }else if (testResult.getStatus() == ITestResult.SKIP){
+            extentTest.skip(testResult.getName());
         }
+
         BrowserUtilities.wait(3);
         Driver.closeDriver();
     }
